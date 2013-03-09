@@ -12,4 +12,4 @@ header { color: rgb(240, 240, 240);padding-left: 30px; background: rgb(60, 60, 6
 a { color: white; text-decoration: none }
 
 .login { font-size: 18px; z-index: 10000; padding: 10px;}
-.login-text-and-button > div{ display: inline-block; padding: 0 5px;}
+.login-text-and-button > div { display: inline-block; padding: 0 5px;}
