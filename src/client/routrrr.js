@@ -54,6 +54,7 @@ if (Meteor.isClient) {
 
   var markerArray = [];
   var boundArray = [];
+  var resultArray = [];
 
   var clearMarkers = function(){
     for(var i = 0; i < markerArray.length; i++){
@@ -66,6 +67,12 @@ if (Meteor.isClient) {
       boundArray[i].setMap(null);
     }
   };
+
+  var clearResults = function(){
+    for(var i = 0; i < resultArray.length; i++){
+      resultArray[i].setMap(null);
+    }
+  }
 
   //places a marker at given lat and lon, inserts position into DB if there is no current marker by user
   var placeMarker = function(lat, lon){
@@ -84,6 +91,16 @@ if (Meteor.isClient) {
       currentMarker.setMap(map);
     };
 
+    var placeResults = function(lat, lon){
+      var position = new google.maps.LatLng(lat, lon);
+       result = new google.maps.Marker({
+        position: position,
+        title: user || 'yo!'
+      });
+       resultArray.push(result);
+       result.setMap(map);
+    }
+
     //function draws bounding box
     var drawBounds = function(newLat, newLon){
       var bound;
@@ -96,8 +113,13 @@ if (Meteor.isClient) {
             new google.maps.LatLng(newLat, newLon),
           ]
 
-          var NE = new google.maps.LatLng(myLat, myLon);
-          var SW = new google.maps.LatLng(newLat, newLon);
+          var mostNorth = Math.max(myLat, newLat);
+          var mostEast  = Math.max(myLon, newLon);
+          var mostWest  = Math.min(myLon, newLon);
+          var mostSouth = Math.min(myLat, newLat);
+
+          var NE = new google.maps.LatLng(mostNorth, mostEast);
+          var SW = new google.maps.LatLng(mostSouth, mostWest);
           var boundz = new google.maps.LatLngBounds(SW, NE);
           var request = {
             bounds: boundz,
@@ -117,7 +139,10 @@ if (Meteor.isClient) {
           bound.setMap(map);
 
           service.nearbySearch(request, function(results){
-            console.log(results);
+            clearResults();
+            for(var i = 0; i < results.length; i++){
+              placeResults(results[i].geometry.location.ib, results[i].geometry.location.jb);
+            }
           });
       }
     };
