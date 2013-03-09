@@ -1,5 +1,6 @@
   var map;
   var user;
+  var currentMarker;
 
   var initialise = function() {
 
@@ -42,12 +43,12 @@ if (Meteor.isClient) {
   //places a marker at given lat and lon, inserts position into DB if there is no current marker by user
   var placeMarker = function(lat, lon){
       var position = new google.maps.LatLng(lat, lon);
-      var marker = new google.maps.Marker({
+       currentMarker = new google.maps.Marker({
         position: position,
         title: user || 'yo!'
       });
 
-      marker.setMap(map);
+      currentMarker.setMap(map);
       var isThere = Markers.findOne({user: Meteor.userId()});
 
       //checks if a marker from the user already exists in DB
@@ -56,12 +57,36 @@ if (Meteor.isClient) {
       } else {
         console.log('Marker already logged in DB');
       }
-      console.log('yo', marker, map);
     };
+
+    //function draws bounding box
+    var drawBounds = function(lat, lon){
+      var bound;
+        if(currentMarker){
+          var polyCoords =[
+            new google.maps.LatLng(37.774929, -122.419416),
+            new google.maps.LatLng(37.749815, -122.419416),
+            new google.maps.LatLng(37.749815, -122.434902),
+            new google.maps.LatLng(37.774929, -122.434902)
+          ]
+
+          bound = new google.maps.Polygon({
+            paths: polyCoords,
+            strokeColor: "#333",
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: "rgb(70, 182, 66)",
+            fillOpacity: 0.35
+          });
+
+          bound.setMap(map);
+      }
+    }
 
   Template.header.events = {
       'click .putMarker' : function () {
         placeMarker(37.749815, -122.434902);
+        drawBounds();
       }
     };
 
