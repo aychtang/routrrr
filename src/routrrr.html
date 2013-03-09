@@ -1,0 +1,27 @@
+<head>
+  <title>routrrr</title>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCzjdQ8Ltdsmxu__6VmDliK5BDtDOWYf-I&sensor=true"></script>
+</head>
+
+<body>
+    {{> header}}
+    {{> map}}
+</body>
+
+<template name="header">
+  <header>
+    <h1 class="title headerLine">routrrr</h1>
+    <nav>
+      <ul class="headerLine">
+        <li><a href="#" class="about">About</a></li>
+        <li><a href="#" class="faq">FAQ</a></li>
+        <li>{{loginButtons}}</li>
+      </ul>
+    </nav>
+
+  </header>
+</template>
+
+<template name="map">
+  <div id="map_canvas"></div>
+</template>
