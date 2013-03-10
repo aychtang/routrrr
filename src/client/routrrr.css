@@ -13,3 +13,5 @@ a { color: white; text-decoration: none }
 
 .login { font-size: 18px; z-index: 10000; padding: 10px;}
 .login-text-and-button > div { display: inline-block; padding: 0 5px;}
+
+.mindblow {width:200px; height: 200px;}

@@ -52,6 +52,28 @@ if(!Markers){
 
 if (Meteor.isClient) {
 
+  var findOtherMarkers = function(){
+    return Markers.find({ 'user' :{$ne: Meteor.userId()}}).fetch();
+  };
+
+  var useOtherMarkers = function(){
+    otherArray = findOtherMarkers();
+    console.log(otherArray);
+    for(var i = 0; i < otherArray.length; i++){
+      placeOtherUser(otherArray[i].markerlat, otherArray[i].marketlon, otherArray[i].user);
+    }
+  };
+
+  var placeOtherUser = function(lat, lon, userId){
+    var position = new google.maps.LatLng(lat, lon);
+    var userMarker = new google.maps.Marker({
+        position: position,
+        title: user || 'yo!'
+      });
+
+    userMarker.setMap(map);
+  }
+
   var markerArray = [];
   var boundArray = [];
   var resultArray = [];
@@ -72,10 +94,10 @@ if (Meteor.isClient) {
     for(var i = 0; i < resultArray.length; i++){
       resultArray[i].setMap(null);
     }
-  }
+  };
 
   //places a marker at given lat and lon, inserts position into DB if there is no current marker by user
-  var placeMarker = function(lat, lon){
+    var placeMarker = function(lat, lon){
       var position = new google.maps.LatLng(lat, lon);
        currentMarker = new google.maps.Marker({
         position: position,
@@ -91,12 +113,21 @@ if (Meteor.isClient) {
       currentMarker.setMap(map);
     };
 
-    var placeResults = function(lat, lon){
+    var placeResult = function(lat, lon, resultObj){
       var position = new google.maps.LatLng(lat, lon);
        result = new google.maps.Marker({
         position: position,
         title: user || 'yo!'
       });
+
+       var infowindow = new google.maps.InfoWindow({
+        content: '<h1>'+ resultObj.name + '</h1><img class="mindblow" src="http://instame.me/uploads/D4h.gif"></img>'
+      });
+
+       google.maps.event.addListener(result, 'click', function() {
+        infowindow.open(map,this);
+      });
+
        resultArray.push(result);
        result.setMap(map);
     }
@@ -141,17 +172,24 @@ if (Meteor.isClient) {
           service.nearbySearch(request, function(results){
             clearResults();
             for(var i = 0; i < results.length; i++){
-              placeResults(results[i].geometry.location.ib, results[i].geometry.location.jb);
+              if(results[i].rating > 4.1){
+                placeResult(results[i].geometry.location.ib, results[i].geometry.location.jb, results[i]);
+              }
             }
+            console.log(results);
           });
       }
     };
 
   Meteor.startup(function(){
-
     //Renders map on startup
     Template.map.rendered = function(){
-      initialise();
+        initialise();
+        var disuser = Meteor.user();
+        console.log('test');
+        console.log(disuser.profile);
+        Markers.insert({user: Meteor.userId(), name: Meteor.user().profile.name, coords: origin});
+      useOtherMarkers();
     };
   });
 }
