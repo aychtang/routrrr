@@ -37,6 +37,15 @@
     }
     clearMarkers();
     currentMarker.setMap(map);
+    Session.set('origin', origin.position);
+  };
+
+  var googleClickHandler = function(event){
+      var newLat = event.latLng.lat();
+      var newLon = event.latLng.lng();
+
+      placeMarker(newLat, newLon);
+      drawBounds(newLat, newLon);
   };
 
   //Renders map and puts marker at lat/lon passed into argument.
@@ -51,13 +60,7 @@
     map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
     service = new google.maps.places.PlacesService(map);
 
-    google.maps.event.addListener(map, 'click', function(event) {
-      var newLat = event.latLng.lat();
-      var newLon = event.latLng.lng();
-
-      placeMarker(newLat, newLon);
-      drawBounds(newLat, newLon);
-    });
+    google.maps.event.addListener(map, 'click', googleClickHandler);
   };
 
   //Sets the latitude and longitude of the user, calls map and marker makers
@@ -77,7 +80,7 @@
       title: 'yo!'
     });
 
-     var infowindow = new google.maps.InfoWindow({
+    var infowindow = new google.maps.InfoWindow({
       content: '<h1>'+ resultObj.name + '</h1><img class="mindblow" src="http://instame.me/uploads/D4h.gif"></img>'
     });
 
