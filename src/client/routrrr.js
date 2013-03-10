@@ -1,6 +1,7 @@
 if (Meteor.isClient) {
 
   var Markers = new Meteor.Collection('Markers');
+  var LoggedIn = new Meteor.Collection('LoggedIn');
 
   var initialise = function() {
     //initialise function creates the map, plots the first marker on users current position.
@@ -25,8 +26,8 @@ if (Meteor.isClient) {
       var origin = Session.get('origin');
       if(!origin){
         console.log('nay');
-      } else {
-        console.log('yay')
+      } else if (!LoggedIn.findOne({user: Meteor.userId()})){
+        LoggedIn.insert({user: Meteor.userId(), position: origin});
       }
     });
 

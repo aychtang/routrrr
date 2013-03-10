@@ -92,6 +92,14 @@
     result.setMap(map);
   }
 
+  var placeOtherUsers = function(lat, lon, otherUser){
+    var position = new google.maps.LatLng(lat, lon);
+     result = new google.maps.Marker({
+      position: position,
+      title: 'yo!'
+    });
+  }
+
   //function draws bounding box
   var drawBounds = function(newLat, newLon){
     var bound;

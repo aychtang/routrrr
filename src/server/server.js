@@ -1,5 +1,5 @@
 if (Meteor.isServer) {
-  var Markers = new Meteor.Collection('Markers');
+  var LoggedIn = new Meteor.Collection('LoggedIn');
   Meteor.methods({
     ultimateClear : function(){
       Markers.remove({});
