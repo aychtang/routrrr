@@ -6,13 +6,16 @@ if (Meteor.isClient) {
 
   var findOthers = function(){
     var user = Meteor.userId();
-    var others = LoggedIn.find({user: {$ne: user}}).fetch();
-
-    for(var i = 0; i < others.length; i++){
-      var otherInfo = others[i];
-      var otherUser = Meteor.users.findOne({_id: others[i].user});
-      console.log(otherUser, 'other');
-      placeOtherUsers(otherInfo.position.ib, otherInfo.position.jb, otherUser);
+    if(!beating){
+      Meteor.setInterval(function(){
+        var others = LoggedIn.find({user: {$ne: user}}).fetch();
+        clearPeeps();
+        for(var i = 0; i < others.length; i++){
+          var otherInfo = others[i];
+          var otherUser = Meteor.users.findOne({_id: others[i].user});
+          placeOtherUsers(otherInfo.position.ib, otherInfo.position.jb, otherUser);
+        }
+      }, 1000)
     }
   };
 
@@ -28,12 +31,24 @@ if (Meteor.isClient) {
     */
   };
 
+  var beating = false;
+
+  var startBeating = function(){
+    if(!beating){
+      Meteor.setInterval(function(){
+      console.log('yo');
+      Meteor.call('heartbeat', Meteor.userId());
+    }, 5000)
+      beating = true;
+    } else {
+      return false;
+    }
+  };
+
   Meteor.startup(function(){
     //Renders map on startup
     Template.map.rendered = function(){
       initialise();
-      console.log(Meteor.userId());
-      console.log(LoggedIn.find({user: {$ne : Meteor.userId()}}).fetch());
     };
 
     Meteor.autorun(function(){
@@ -42,15 +57,14 @@ if (Meteor.isClient) {
       }
 
       if(!origin){
-        console.log('nay');
+        console.log('loading');
       } else if (origin && !LoggedIn.findOne({user: Meteor.userId()})){
         LoggedIn.insert({user: Meteor.userId(), position: origin});
       } else {
         findOthers();
+        startBeating();
       }
 
     });
-
-
   });
 }

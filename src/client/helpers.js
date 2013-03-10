@@ -81,6 +81,7 @@
   };
 
   var placeResult = function(lat, lon, resultObj){
+    console.log(resultObj);
     var position = new google.maps.LatLng(lat, lon);
      result = new google.maps.Marker({
       position: position,
@@ -92,7 +93,7 @@
     });
 
     google.maps.event.addListener(result, 'click', function() {
-    infowindow.open(map,this);
+      infowindow.open(map,this);
     });
 
     resultArray.push(result);
@@ -101,11 +102,11 @@
 
   var placeOtherUsers = function(lat, lon, otherUser){
     var position = new google.maps.LatLng(lat, lon);
-    var thisUser = LoggedIn.findOne({user: otherUser._id});
-    console.log('this', thisUser)
+    var thisUser = Meteor.users.findOne({_id: otherUser._id});
      userMarker = new google.maps.Marker({
       position: position,
-      title: 'THIS IS A OTHER USER YO'
+      icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
+      title: thisUser.profile.name || 'other user'
     });
     peopleArray.push(userMarker);
     userMarker.setMap(map);
