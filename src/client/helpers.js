@@ -1,6 +1,7 @@
   var markerArray = [];
   var boundArray = [];
   var resultArray = [];
+  var peopleArray = [];
   var map;
   var currentMarker;
   var origin;
@@ -20,6 +21,12 @@
   var clearResults = function(){
     for(var i = 0; i < resultArray.length; i++){
       resultArray[i].setMap(null);
+    }
+  };
+
+   var clearPeeps = function(){
+    for(var i = 0; i < peopleArray.length; i++){
+      peopleArray[i].setMap(null);
     }
   };
 
@@ -94,10 +101,14 @@
 
   var placeOtherUsers = function(lat, lon, otherUser){
     var position = new google.maps.LatLng(lat, lon);
-     result = new google.maps.Marker({
+    var thisUser = LoggedIn.findOne({user: otherUser._id});
+    console.log('this', thisUser)
+     userMarker = new google.maps.Marker({
       position: position,
-      title: 'yo!'
+      title: 'THIS IS A OTHER USER YO'
     });
+    peopleArray.push(userMarker);
+    userMarker.setMap(map);
   }
 
   //function draws bounding box
