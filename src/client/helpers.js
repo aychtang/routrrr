@@ -10,24 +10,28 @@
     for(var i = 0; i < markerArray.length; i++){
       markerArray[i].setMap(null);
     }
+    markerArray.length = 0;
   };
 
   var clearBounds = function(){
     for(var i = 0; i < boundArray.length; i++){
       boundArray[i].setMap(null);
     }
+    boundArray.length = 0;
   };
 
   var clearResults = function(){
     for(var i = 0; i < resultArray.length; i++){
       resultArray[i].setMap(null);
     }
+    resultArray.length = 0;
   };
 
    var clearPeeps = function(){
     for(var i = 0; i < peopleArray.length; i++){
       peopleArray[i].setMap(null);
     }
+    peopleArray.length = 0;
   };
 
   //places a marker at given lat and lon, inserts position into DB if there is no current marker by user
@@ -42,7 +46,6 @@
     if(currentMarker !== origin){
       markerArray.push(currentMarker);
     }
-    clearMarkers();
     currentMarker.setMap(map);
     Session.set('origin', origin.position);
   };
@@ -51,7 +54,9 @@
       var newLat = event.latLng.lat();
       var newLon = event.latLng.lng();
 
+      clearMarkers();
       placeMarker(newLat, newLon);
+      clearBounds();
       drawBounds(newLat, newLon);
   };
 
@@ -81,9 +86,9 @@
   };
 
   var placeResult = function(lat, lon, resultObj){
-    console.log(resultObj);
     var position = new google.maps.LatLng(lat, lon);
-     result = new google.maps.Marker({
+
+    var result = new google.maps.Marker({
       position: position,
       title: 'yo!'
     });
@@ -93,7 +98,7 @@
     });
 
     google.maps.event.addListener(result, 'click', function() {
-      infowindow.open(map,this);
+      infowindow.open(map, this);
     });
 
     resultArray.push(result);
@@ -103,58 +108,75 @@
   var placeOtherUsers = function(lat, lon, otherUser){
     var position = new google.maps.LatLng(lat, lon);
     var thisUser = Meteor.users.findOne({_id: otherUser._id});
-     userMarker = new google.maps.Marker({
+
+    var userMarker = new google.maps.Marker({
       position: position,
       icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
       title: thisUser.profile.name || 'other user'
     });
-    peopleArray.push(userMarker);
+
+    peopleArray.push(userMarker)
     userMarker.setMap(map);
   }
+
+  var findOthers = function(){
+    var user = Meteor.userId();
+    if(!beating){
+      Meteor.setInterval(function(){
+        var others = LoggedIn.find({user: {$ne: user}}).fetch();
+        clearPeeps();
+        for(var i = 0; i < others.length; i++){
+          var otherInfo = others[i];
+          var otherUser = Meteor.users.findOne({_id: others[i].user});
+          placeOtherUsers(otherInfo.position.ib, otherInfo.position.jb, otherUser);
+        }
+      }, 500);
+    }
+  };
 
   //function draws bounding box
   var drawBounds = function(newLat, newLon){
     var bound;
 
-        var polyCoords =[
-          new google.maps.LatLng(myLat, newLon),
-          new google.maps.LatLng(myLat, myLon),
-          new google.maps.LatLng(newLat, myLon),
-          new google.maps.LatLng(newLat, newLon),
-        ]
+    var polyCoords =[
+      new google.maps.LatLng(myLat, newLon),
+      new google.maps.LatLng(myLat, myLon),
+      new google.maps.LatLng(newLat, myLon),
+      new google.maps.LatLng(newLat, newLon),
+    ];
 
-        var mostNorth = Math.max(myLat, newLat);
-        var mostEast  = Math.max(myLon, newLon);
-        var mostWest  = Math.min(myLon, newLon);
-        var mostSouth = Math.min(myLat, newLat);
+    var mostNorth = Math.max(myLat, newLat);
+    var mostEast  = Math.max(myLon, newLon);
+    var mostWest  = Math.min(myLon, newLon);
+    var mostSouth = Math.min(myLat, newLat);
 
-        var NE = new google.maps.LatLng(mostNorth, mostEast);
-        var SW = new google.maps.LatLng(mostSouth, mostWest);
-        var boundz = new google.maps.LatLngBounds(SW, NE);
-        var request = {
-          bounds: boundz,
-          types: ['cafe']
-        };
+    var NE = new google.maps.LatLng(mostNorth, mostEast);
+    var SW = new google.maps.LatLng(mostSouth, mostWest);
+    var boundz = new google.maps.LatLngBounds(SW, NE);
 
-        bound = new google.maps.Polygon({
-          paths: polyCoords,
-          strokeColor: "#333",
-          strokeOpacity: 0.8,
-          strokeWeight: 3,
-          fillColor: "rgb(70, 182, 66)",
-          fillOpacity: 0.20
-        });
+    var request = {
+      bounds: boundz,
+      types: ['cafe']
+    };
 
-        boundArray.push(bound);
-        clearBounds();
-        bound.setMap(map);
+    bound = new google.maps.Polygon({
+      paths: polyCoords,
+      strokeColor: "#333",
+      strokeOpacity: 0.8,
+      strokeWeight: 3,
+      fillColor: "rgb(70, 182, 66)",
+      fillOpacity: 0.25
+    });
 
-        service.nearbySearch(request, function(results){
-          clearResults();
-          for(var i = 0; i < results.length; i++){
-            if(results[i].rating > 4.1){
-              placeResult(results[i].geometry.location.ib, results[i].geometry.location.jb, results[i]);
-            }
-          }
-        });
+    boundArray.push(bound);
+    bound.setMap(map);
+
+    service.nearbySearch(request, function(results){
+      clearResults();
+      for(var i = 0; i < results.length; i++){
+        if(results[i].rating > 4){
+          placeResult(results[i].geometry.location.ib, results[i].geometry.location.jb, results[i]);
+        }
+      }
+    });
   };

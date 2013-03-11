@@ -18,10 +18,22 @@
         <li>{{loginButtons}}</li>
       </ul>
     </nav>
-
+    {{> nameList}}
   </header>
 </template>
 
 <template name="map">
   <div id="map_canvas"></div>
+</template>
+
+<template name="nameList">
+  <ul class="userlist">
+    {{#each returnPeople}}
+      <li>{{> player}}</li>
+    {{/each}}
+  </ul>
+</template>
+
+<template name="player">
+  <p>{{_id}}</p>
 </template>
