@@ -1,6 +1,7 @@
 <head>
   <title>routrrr</title>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCzjdQ8Ltdsmxu__6VmDliK5BDtDOWYf-I&sensor=true&libraries=places"></script>
+  <meta name="viewport" content="initial-scale = 1.0,maximum-scale = 1.0" />
 </head>
 
 <body>
@@ -28,9 +29,6 @@
 
 <template name="nameList">
   <ul class="userlist">
-    {{#each returnPeople}}
-      <li>{{> player}}</li>
-    {{/each}}
   </ul>
 </template>
 
