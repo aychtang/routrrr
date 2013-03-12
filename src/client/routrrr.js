@@ -13,14 +13,15 @@ if (Meteor.isClient) {
     return userInfo;
   };
 
+  Template.player.preserve(['.usas']);
+
   Template.player.events = {
     'click p' : function () {
       var thisDude = LoggedIn.findOne({user : this._id});
-      console.log('yo');
       clearMarkers();
-      placeMarker(thisDude.position.ib, thisDude.position.jb);
+      placeMarker(thisDude.position.mb, thisDude.position.nb);
       clearBounds();
-      drawBounds(thisDude.position.ib, thisDude.position.jb);
+      drawBounds(thisDude.position.mb, thisDude.position.nb);
     }
   };
 

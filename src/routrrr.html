@@ -14,8 +14,6 @@
     <h1 class="title headerLine">routrrr</h1>
     <nav>
       <ul class="headerLine">
-        <li><a href="#" class="about">About</a></li>
-        <li><a href="#" class="faq">FAQ</a></li>
         <li>{{loginButtons}}</li>
       </ul>
     </nav>
@@ -29,9 +27,12 @@
 
 <template name="nameList">
   <ul class="userlist">
+    {{#each returnPeople}}
+      <li class="usas"><a href="#">{{> player}}</a></li>
+    {{/each}}
   </ul>
 </template>
 
 <template name="player">
-  <p>{{_id}}</p>
+  <p class="usas">{{profile.name}}</p>
 </template>

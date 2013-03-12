@@ -16,4 +16,5 @@ a { color: white; text-decoration: none }
 
 .mindblow { width:10em; height: 10em; }
 
-.userlist li { display: inline-block; padding: 5px 2px; }
+.userlist { height: 40px; overflow: auto; padding-left: 130px;}
+.userlist li { display: inline-block; padding: 5px 2px; font-family: sans-serif;}

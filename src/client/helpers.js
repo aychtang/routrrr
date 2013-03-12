@@ -92,7 +92,6 @@
       position: position,
       title: 'yo!'
     });
-
     var infowindow = new google.maps.InfoWindow({
       content: '<h1>'+ resultObj.name + '</h1><img class="mindblow" src="http://instame.me/uploads/D4h.gif"></img>'
     });
@@ -103,7 +102,7 @@
 
     resultArray.push(result);
     result.setMap(map);
-  }
+  };
 
   var placeOtherUsers = function(lat, lon, otherUser){
     var position = new google.maps.LatLng(lat, lon);
@@ -117,7 +116,7 @@
 
     peopleArray.push(userMarker)
     userMarker.setMap(map);
-  }
+  };
 
   var findOthers = function(){
     var user = Meteor.userId();
@@ -128,7 +127,7 @@
         for(var i = 0; i < others.length; i++){
           var otherInfo = others[i];
           var otherUser = Meteor.users.findOne({_id: others[i].user});
-          placeOtherUsers(otherInfo.position.ib, otherInfo.position.jb, otherUser);
+          placeOtherUsers(otherInfo.position.mb, otherInfo.position.nb, otherUser);
         }
       }, 1500);
     }
@@ -175,7 +174,7 @@
       clearResults();
       for(var i = 0; i < results.length; i++){
         if(results[i].rating > 4){
-          placeResult(results[i].geometry.location.ib, results[i].geometry.location.jb, results[i]);
+          placeResult(results[i].geometry.location.mb, results[i].geometry.location.nb, results[i]);
         }
       }
     });
