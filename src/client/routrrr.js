@@ -6,14 +6,28 @@ if (Meteor.isClient) {
 
   Template.nameList.returnPeople = function(){
     var people = LoggedIn.find({user: {$ne : Meteor.userId()}}).fetch();
-    return people;
+    var userInfo = [];
+    for(var i = 0; i < people.length; i++){
+      userInfo.push(Meteor.users.findOne({_id: people[i].user}));
+    }
+    return userInfo;
+  };
+
+  Template.player.events = {
+    'click p' : function () {
+      var thisDude = LoggedIn.findOne({user : this._id});
+      console.log('yo');
+      clearMarkers();
+      placeMarker(thisDude.position.ib, thisDude.position.jb);
+      clearBounds();
+      drawBounds(thisDude.position.ib, thisDude.position.jb);
+    }
   };
 
   var initialise = function() {
     navigator.geolocation.getCurrentPosition(setPosition);
 
     Meteor.autorun(function(){
-
       if(Meteor.user()){
         var origin = Session.get('origin');
       }
@@ -26,6 +40,7 @@ if (Meteor.isClient) {
         findOthers();
         startBeating();
       }
+
     });
   };
 

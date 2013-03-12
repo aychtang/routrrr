@@ -130,7 +130,7 @@
           var otherUser = Meteor.users.findOne({_id: others[i].user});
           placeOtherUsers(otherInfo.position.ib, otherInfo.position.jb, otherUser);
         }
-      }, 500);
+      }, 1500);
     }
   };
 

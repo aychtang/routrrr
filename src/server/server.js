@@ -17,6 +17,6 @@ if (Meteor.isServer) {
     Meteor.setInterval(function(){
       var now = new Date().getTime();
       LoggedIn.find({timestamp: {$lt: (now - 4 * 1000) }}).fetch().forEach(function(data){LoggedIn.remove(data)});
-    }, 1000)
+    }, 1500)
   })
 }
