@@ -17,7 +17,8 @@ if (Meteor.isClient) {
 
   Template.player.events = {
     'click .users' : function () {
-      app.routeToPerson(LoggedIn.findOne({user : this._id}))
+      var thisUser = LoggedIn.findOne({user : this._id});
+      app.routeToPerson(thisUser.position.mb, thisUser.position.nb);
     }
   };
 
@@ -30,7 +31,7 @@ if (Meteor.isClient) {
       }
 
       if(!origin){
-        console.log('loading');
+        console.log('loading...');
       } else if (origin && !LoggedIn.findOne({user: Meteor.userId()})){
         LoggedIn.insert({user: Meteor.userId(), position: origin});
       } else {

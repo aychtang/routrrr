@@ -1,10 +1,6 @@
 if (Meteor.isServer) {
   var LoggedIn = new Meteor.Collection('LoggedIn');
   Meteor.methods({
-    ultimateClear : function(){
-      LoggedIn.remove({});
-    },
-
     heartbeat: function(userId){
       var thisUser = LoggedIn.findOne({user: userId});
       if(thisUser){

@@ -10,8 +10,9 @@
   var currentMarker;
   var origin;
 
-  // todo: wrap this up into a route object
+  var route = {};
 
+  // todo: wrap this up into a route object
   var clear = function(type){
     for(var i = 0; i < types[type].length; i++){
       types[type][i].setMap(null);
@@ -39,11 +40,7 @@
     var newLat = event.latLng.lat();
     var newLon = event.latLng.lng();
 
-    // todo: get some code reuse with the routeToPerson function
-    clear('markers');
-    placeMarker(newLat, newLon);
-    clear('bounds');
-    drawBounds(newLat, newLon);
+    app.routeToPerson(newLat, newLon);
   };
 
   //Renders map and puts marker at lat/lon passed into argument.
@@ -142,11 +139,11 @@
   };
 
   window.app = {
-    routeToPerson: function(person){
+    routeToPerson: function(lat, lon){
       clear('markers');
-      placeMarker(person.position.mb, person.position.nb);
+      placeMarker(lat, lon);
       clear('bounds');
-      drawBounds(person.position.mb, person.position.nb);
+      drawBounds(lat, lon);
     },
 
     //Sets the latitude and longitude of the user, calls map and marker makers
