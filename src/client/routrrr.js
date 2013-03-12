@@ -16,17 +16,13 @@ if (Meteor.isClient) {
   Template.player.preserve(['.usas']);
 
   Template.player.events = {
-    'click p' : function () {
-      var thisDude = LoggedIn.findOne({user : this._id});
-      clearMarkers();
-      placeMarker(thisDude.position.mb, thisDude.position.nb);
-      clearBounds();
-      drawBounds(thisDude.position.mb, thisDude.position.nb);
+    'click .users' : function () {
+      app.routeToPerson(LoggedIn.findOne({user : this._id}))
     }
   };
 
   var initialise = function() {
-    navigator.geolocation.getCurrentPosition(setPosition);
+    navigator.geolocation.getCurrentPosition(app.setPosition);
 
     Meteor.autorun(function(){
       if(Meteor.user()){
@@ -38,22 +34,11 @@ if (Meteor.isClient) {
       } else if (origin && !LoggedIn.findOne({user: Meteor.userId()})){
         LoggedIn.insert({user: Meteor.userId(), position: origin});
       } else {
-        findOthers();
-        startBeating();
+        app.findOthers();
+        app.startBeating();
       }
 
     });
-  };
-
-  var startBeating = function(){
-    if(!beating){
-      Meteor.setInterval(function(){
-      Meteor.call('heartbeat', Meteor.userId());
-    }, 500)
-      beating = true;
-    } else {
-      return false;
-    }
   };
 
   Meteor.startup(function(){
