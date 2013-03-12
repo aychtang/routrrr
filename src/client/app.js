@@ -10,8 +10,6 @@
   var currentMarker;
   var origin;
 
-  var route = {};
-
   // todo: wrap this up into a route object
   var clear = function(type){
     for(var i = 0; i < types[type].length; i++){

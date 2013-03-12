@@ -13,7 +13,7 @@ if (Meteor.isClient) {
     return userInfo;
   };
 
-  Template.player.preserve(['.usas']);
+  Template.player.preserve(['.users']);
 
   Template.player.events = {
     'click .users' : function () {
