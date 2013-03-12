@@ -4,7 +4,7 @@ body { height: 100%; margin: 0; padding: 0; }
 
 nav { display: inline-block; }
 nav ul { padding-left: 40px; }
-nav li { list-style: none; display: inline-block; padding: 0 5px; font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif; cursor: pointer;}
+nav li { list-style: none; display: inline-block; padding: 0 5px; font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif; cursor: pointer; }
 header { color: rgb(240, 240, 240);padding-left: 30px; background: rgb(60, 60, 60); }
 .headerLine { line-height: 1.8em; height: 1.8em; }
 
@@ -14,7 +14,8 @@ a { color: white; text-decoration: none }
 .login { font-size: 18px; z-index: 10000; padding: 10px; }
 .login-text-and-button > div { display: inline-block; padding: 0 5px; }
 
-.mindblow { width:10em; height: 10em; }
+.mindblow { width:8em; height: 8em; float: left; }
+em { float: left; }
 
-.userlist { height: 40px; overflow: auto; padding-left: 130px;}
-.userlist li { display: inline-block; padding: 5px 2px; font-family: sans-serif;}
+.userlist { height: 40px; overflow: auto; padding-left: 130px; }
+.userlist li { display: inline-block; padding: 5px 2px; font-family: sans-serif; }

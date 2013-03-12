@@ -5,7 +5,25 @@
     "commit": "2d8b41a87cec884489ead138b5dfea31487363f3"
   },
   "dependencies": {
-    "basePackages": {},
-    "packages": {}
+    "basePackages": {
+      "gravatar": {}
+    },
+    "packages": {
+      "gravatar": {
+        "git": "https://github.com/tmeasday/meteor-gravatar.git",
+        "tag": "v0.0.3",
+        "commit": "557d1a7bff98d285cb023b0f44541a66bf0c7b4c"
+      },
+      "crypto-md5": {
+        "git": "https://github.com/tmeasday/meteor-crypto-md5.git",
+        "tag": "v0.0.1",
+        "commit": "a0638a6cabfc84e19f2d5828f76aa8f6a0cc8c1a"
+      },
+      "crypto-base": {
+        "git": "https://github.com/tmeasday/meteor-crypto-base.git",
+        "tag": "v0.0.1",
+        "commit": "668fc710ad041eee6ae2f9b53289128f211aa9e0"
+      }
+    }
   }
 }

@@ -1,37 +1,18 @@
-  var markerArray = [];
-  var boundArray = [];
-  var resultArray = [];
-  var peopleArray = [];
+  var types = {
+    marker: [],
+    bound: [],
+    result: [],
+    people: []
+  };
   var map;
   var currentMarker;
   var origin;
 
-  var clearMarkers = function(){
-    for(var i = 0; i < markerArray.length; i++){
-      markerArray[i].setMap(null);
+  var clear = function(typeArray){
+    for(var i = 0; i < typeArray.length; i++){
+      typeArray[i].setMap(null);
     }
-    markerArray.length = 0;
-  };
-
-  var clearBounds = function(){
-    for(var i = 0; i < boundArray.length; i++){
-      boundArray[i].setMap(null);
-    }
-    boundArray.length = 0;
-  };
-
-  var clearResults = function(){
-    for(var i = 0; i < resultArray.length; i++){
-      resultArray[i].setMap(null);
-    }
-    resultArray.length = 0;
-  };
-
-   var clearPeeps = function(){
-    for(var i = 0; i < peopleArray.length; i++){
-      peopleArray[i].setMap(null);
-    }
-    peopleArray.length = 0;
+    typeArray.length = 0;
   };
 
   //places a marker at given lat and lon, inserts position into DB if there is no current marker by user
@@ -44,7 +25,7 @@
 
     origin = origin || currentMarker;
     if(currentMarker !== origin){
-      markerArray.push(currentMarker);
+      types.marker.push(currentMarker);
     }
     currentMarker.setMap(map);
     Session.set('origin', origin.position);
@@ -54,9 +35,9 @@
       var newLat = event.latLng.lat();
       var newLon = event.latLng.lng();
 
-      clearMarkers();
+      clear(types.marker);
       placeMarker(newLat, newLon);
-      clearBounds();
+      clear(types.bound);
       drawBounds(newLat, newLon);
   };
 
@@ -93,14 +74,14 @@
       title: 'yo!'
     });
     var infowindow = new google.maps.InfoWindow({
-      content: '<h1>'+ resultObj.name + '</h1><img class="mindblow" src="http://instame.me/uploads/D4h.gif"></img>'
+      content: '<h1>'+ resultObj.name + '</h1><em>'+resultObj.vicinity+'</em>'
     });
 
     google.maps.event.addListener(result, 'click', function() {
       infowindow.open(map, this);
     });
 
-    resultArray.push(result);
+    types.result.push(result);
     result.setMap(map);
   };
 
@@ -114,7 +95,7 @@
       title: thisUser.profile.name || 'other user'
     });
 
-    peopleArray.push(userMarker)
+    types.people.push(userMarker)
     userMarker.setMap(map);
   };
 
@@ -123,7 +104,7 @@
     if(!beating){
       Meteor.setInterval(function(){
         var others = LoggedIn.find({user: {$ne: user}}).fetch();
-        clearPeeps();
+        clear(types.people);
         for(var i = 0; i < others.length; i++){
           var otherInfo = others[i];
           var otherUser = Meteor.users.findOne({_id: others[i].user});
@@ -167,11 +148,11 @@
       fillOpacity: 0.25
     });
 
-    boundArray.push(bound);
+    types.bound.push(bound);
     bound.setMap(map);
 
     service.nearbySearch(request, function(results){
-      clearResults();
+      clear(types.result);
       for(var i = 0; i < results.length; i++){
         if(results[i].rating > 4){
           placeResult(results[i].geometry.location.mb, results[i].geometry.location.nb, results[i]);

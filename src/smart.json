@@ -4,5 +4,7 @@
     "branch": "master",
     "tag": "v0.5.6"
   },
-  "packages": {}
+  "packages": {
+    "gravatar": {}
+  }
 }
