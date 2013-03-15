@@ -1,15 +1,15 @@
 if (Meteor.isClient) {
 
   var LoggedIn = new Meteor.Collection('LoggedIn');
-  var userArray = [];
   var beating = false;
 
   Template.nameList.returnPeople = function(){
     var people = LoggedIn.find({user: {$ne : Meteor.userId()}}).fetch();
     var userInfo = [];
-    for(var i = 0; i < people.length; i++){
+    for (var i = 0; i < people.length; i++){
       userInfo.push(Meteor.users.findOne({_id: people[i].user}));
     }
+
     return userInfo;
   };
 
@@ -18,7 +18,7 @@ if (Meteor.isClient) {
   Template.player.events = {
     'click .users' : function () {
       var thisUser = LoggedIn.findOne({user : this._id});
-      app.routeToPerson(thisUser.position.mb, thisUser.position.nb);
+      app.routeToPosition(thisUser.position.mb, thisUser.position.nb);
     }
   };
 
@@ -26,11 +26,11 @@ if (Meteor.isClient) {
     navigator.geolocation.getCurrentPosition(app.setPosition);
 
     Meteor.autorun(function(){
-      if(Meteor.user()){
+      if (Meteor.user()){
         var origin = Session.get('origin');
       }
 
-      if(!origin){
+      if (!origin){
         console.log('loading...');
       } else if (origin && !LoggedIn.findOne({user: Meteor.userId()})){
         LoggedIn.insert({user: Meteor.userId(), position: origin});

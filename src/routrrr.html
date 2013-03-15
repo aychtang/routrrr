@@ -1,23 +1,39 @@
 <head>
-  <title>routrrr</title>
+  <title>routrrr - the shared map.</title>
+  <script type="text/javascript" src="//use.typekit.net/wbz6kwv.js"></script>
+  <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCzjdQ8Ltdsmxu__6VmDliK5BDtDOWYf-I&sensor=true&libraries=places"></script>
   <meta name="viewport" content="initial-scale = 1.0,maximum-scale = 1.0" />
 </head>
 
 <body>
+
+    {{#unless currentUser}}
+      <div class="info">To get started, allow geolocation and sign in with Google.</div>
+    {{/unless}}
+
+    {{#if currentUser}}
+      <div class="info">Click anywhere on the map to start finding cafes, if you recognise someone online, just click their name to find them.</div>
+    {{/if}}
+
     {{> header}}
     {{> map}}
+
 </body>
 
 <template name="header">
   <header>
-    <h1 class="title headerLine">routrrr</h1>
+    <h1 class="title"><a href="http://github.com/cheeseen/routrrr">routrrr</a></h1>
     <nav>
       <ul class="headerLine">
         <li>{{loginButtons}}</li>
       </ul>
     </nav>
-    {{> nameList}}
+
+    {{#if currentUser}}
+      {{> nameList}}
+    {{/if}}
+
   </header>
 </template>
 
@@ -27,9 +43,11 @@
 
 <template name="nameList">
   <ul class="userlist">
+
     {{#each returnPeople}}
       <li><a href="#">{{> player}}</a></li>
     {{/each}}
+
   </ul>
 </template>
 

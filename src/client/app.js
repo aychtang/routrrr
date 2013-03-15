@@ -6,20 +6,21 @@
     results: [],
     people: []
   };
+
   var map;
   var currentMarker;
   var origin;
 
   // todo: wrap this up into a route object
-  var clear = function(type){
-    for(var i = 0; i < types[type].length; i++){
+  var clear = function(type) {
+    for (var i = 0; i < types[type].length; i++) {
       types[type][i].setMap(null);
     }
     types[type].length = 0;
   };
 
   //places a marker at given lat and lon, inserts position into DB if there is no current marker by user
-  var placeMarker = function(lat, lon){
+  var placeMarker = function(lat, lon) {
     var position = new google.maps.LatLng(lat, lon);
     currentMarker = new google.maps.Marker({
       position: position,
@@ -27,22 +28,22 @@
     });
 
     origin = origin || currentMarker;
-    if(currentMarker !== origin){
+    if (currentMarker !== origin) {
       types.markers.push(currentMarker);
     }
     currentMarker.setMap(map);
     Session.set('origin', origin.position);
   };
 
-  var googleClickHandler = function(event){
+  var googleClickHandler = function(event) {
     var newLat = event.latLng.lat();
     var newLon = event.latLng.lng();
 
-    app.routeToPerson(newLat, newLon);
+    app.routeToPosition(newLat, newLon);
   };
 
   //Renders map and puts marker at lat/lon passed into argument.
-  var initMap = function(lat, lon){
+  var initMap = function(lat, lon) {
     var myPosition = new google.maps.LatLng(lat, lon);
     var mapOptions = {
       center: myPosition,
@@ -56,7 +57,7 @@
     google.maps.event.addListener(map, 'click', googleClickHandler);
   };
 
-  var placeResult = function(lat, lon, resultObj){
+  var placeResult = function(lat, lon, resultObj) {
     var position = new google.maps.LatLng(lat, lon);
 
     var result = new google.maps.Marker({
@@ -75,7 +76,7 @@
     result.setMap(map);
   };
 
-  var placeOtherUsers = function(lat, lon, otherUser){
+  var placeOtherUsers = function(lat, lon, otherUser) {
     var position = new google.maps.LatLng(lat, lon);
     var thisUser = Meteor.users.findOne({_id: otherUser._id});
 
@@ -90,7 +91,7 @@
   };
 
   //function draws bounding box
-  var drawBounds = function(newLat, newLon){
+  var drawBounds = function(newLat, newLon) {
     var bound;
 
     var polyCoords =[
@@ -114,22 +115,15 @@
       types: ['cafe']
     };
 
-    bound = new google.maps.Polygon({
-      paths: polyCoords,
-      strokeColor: "#333",
-      strokeOpacity: 0.8,
-      strokeWeight: 3,
-      fillColor: "rgb(70, 182, 66)",
-      fillOpacity: 0.25
-    });
+    bound = new google.maps.Polygon({paths: polyCoords, strokeColor: "#333", strokeOpacity: 0.8, strokeWeight: 3, fillColor: "rgb(70, 182, 66)", fillOpacity: 0.25});
 
     types.bounds.push(bound);
     bound.setMap(map);
 
-    service.nearbySearch(request, function(results){
+    service.nearbySearch(request, function(results) {
       clear('results');
-      for(var i = 0; i < results.length; i++){
-        if(results[i].rating > 4){
+      for (var i = 0; i < results.length; i++) {
+        if (results[i].rating > 4) {
           placeResult(results[i].geometry.location.mb, results[i].geometry.location.nb, results[i]);
         }
       }
@@ -137,7 +131,7 @@
   };
 
   window.app = {
-    routeToPerson: function(lat, lon){
+    routeToPosition: function(lat, lon) {
       clear('markers');
       placeMarker(lat, lon);
       clear('bounds');
@@ -145,7 +139,7 @@
     },
 
     //Sets the latitude and longitude of the user, calls map and marker makers
-    setPosition : function(position){
+    setPosition : function(position) {
       var lat = position.coords.latitude;
       var lon = position.coords.longitude;
       myLat = lat;
@@ -154,13 +148,13 @@
       placeMarker(lat, lon);
     },
 
-    findOthers : function(){
+    findOthers : function() {
       var user = Meteor.userId();
-      if(!beating){
-        Meteor.setInterval(function(){
+      if (!beating) {
+        Meteor.setInterval(function() {
           var others = LoggedIn.find({user: {$ne: user}}).fetch();
           clear('people');
-          for(var i = 0; i < others.length; i++){
+          for (var i = 0; i < others.length; i++) {
             var otherInfo = others[i];
             var otherUser = Meteor.users.findOne({_id: others[i].user});
             placeOtherUsers(otherInfo.position.mb, otherInfo.position.nb, otherUser);
@@ -169,9 +163,10 @@
       }
     },
 
-    startBeating : function(){
-      if(!beating){
-        Meteor.setInterval(function(){
+    //Initialises heartbeat interval
+    startBeating : function() {
+      if (!beating) {
+        Meteor.setInterval(function() {
         Meteor.call('heartbeat', Meteor.userId());
       }, 500)
         beating = true;
