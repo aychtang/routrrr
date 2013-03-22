@@ -18,7 +18,7 @@ if (Meteor.isClient) {
   Template.player.events = {
     'click .users' : function () {
       var thisUser = LoggedIn.findOne({user : this._id});
-      app.routeToPosition(thisUser.position.mb, thisUser.position.nb);
+      app.routeToPosition(thisUser.position.kb, thisUser.position.lb);
     }
   };
 

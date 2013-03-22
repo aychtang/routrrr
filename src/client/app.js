@@ -21,6 +21,7 @@
 
   //places a marker at given lat and lon, inserts position into DB if there is no current marker by user
   var placeMarker = function(lat, lon) {
+
     var position = new google.maps.LatLng(lat, lon);
     currentMarker = new google.maps.Marker({
       position: position,
@@ -124,7 +125,7 @@
       clear('results');
       for (var i = 0; i < results.length; i++) {
         if (results[i].rating > 4) {
-          placeResult(results[i].geometry.location.mb, results[i].geometry.location.nb, results[i]);
+          placeResult(results[i].geometry.location.kb, results[i].geometry.location.lb, results[i]);
         }
       }
     });
@@ -157,7 +158,7 @@
           for (var i = 0; i < others.length; i++) {
             var otherInfo = others[i];
             var otherUser = Meteor.users.findOne({_id: others[i].user});
-            placeOtherUsers(otherInfo.position.mb, otherInfo.position.nb, otherUser);
+            placeOtherUsers(otherInfo.position.kb, otherInfo.position.lb, otherUser);
           }
         }, 1500);
       }
