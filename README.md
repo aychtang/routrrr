@@ -22,6 +22,8 @@ I'd like to include the following:
 - Fully integrate Google Places/Yelp API for better information.
 - Aggregate best results in search area.
 - Allow people to flag themselves for meeting people they don't know, and connecting them with others using their mobiles.
+- Improve UI
+- Improve longer distance searches
 
 ####Built with love and:
 
