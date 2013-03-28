@@ -25,7 +25,6 @@
     var position = new google.maps.LatLng(lat, lon);
     currentMarker = new google.maps.Marker({
       position: position,
-      title: 'yo!'
     });
 
     origin = origin || currentMarker;
@@ -63,10 +62,10 @@
 
     var result = new google.maps.Marker({
       position: position,
-      title: 'yo!'
     });
+
     var infowindow = new google.maps.InfoWindow({
-      content: '<h1>'+ resultObj.name + '</h1><em>'+resultObj.vicinity+'</em>'
+      content: '<h1 class="cafeName">' + resultObj.name + '</h1><em class="cafeLocation">' + resultObj.vicinity + '</em>'
     });
 
     google.maps.event.addListener(result, 'click', function() {
@@ -125,7 +124,7 @@
       clear('results');
       for (var i = 0; i < results.length; i++) {
         if (results[i].rating > 4) {
-          placeResult(results[i].geometry.location.kb, results[i].geometry.location.lb, results[i]);
+          placeResult(results[i].geometry.location.jb, results[i].geometry.location.kb, results[i]);
         }
       }
     });
@@ -159,6 +158,7 @@
             var otherInfo = others[i];
             var otherUser = Meteor.users.findOne({_id: others[i].user});
             placeOtherUsers(otherInfo.position.kb, otherInfo.position.lb, otherUser);
+            placeOtherUsers(otherInfo.position.jb, otherInfo.position.kb, otherUser);
           }
         }, 1500);
       }
@@ -167,6 +167,7 @@
     //Initialises heartbeat interval
     startBeating : function() {
       if (!beating) {
+        var heartbeat =
         Meteor.setInterval(function() {
         Meteor.call('heartbeat', Meteor.userId());
       }, 500)
