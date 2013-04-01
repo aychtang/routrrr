@@ -1,7 +1,7 @@
 routrrr
 =======
 
-###(routrrr.meteor.com)[http://routrrr.meteor.com]
+###[routrrr.meteor.com](http://routrrr.meteor.com)
 
 Find cool places to meet your friends.
 
