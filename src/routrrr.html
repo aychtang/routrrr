@@ -8,14 +8,7 @@
 
 <body>
 
-    {{#unless currentUser}}
-      <div class="info">To get started, allow geolocation and sign in with Google.</div>
-    {{/unless}}
-
-    {{#if currentUser}}
-      <div class="info">Click anywhere on the map to start finding cafes, if you recognise someone online, just click their name to find them.</div>
-    {{/if}}
-
+    {{> tooltip}}
     {{> header}}
     {{> map}}
 
@@ -35,6 +28,16 @@
     {{/if}}
 
   </header>
+</template>
+
+<template name="tooltip">
+    {{#unless currentUser}}
+      <div class="info">To get started, allow geolocation and sign in with Google.</div>
+    {{/unless}}
+
+    {{#if currentUser}}
+      <div class="info">Click anywhere on the map to start finding cafes, if you recognise someone online, just click their name to find them.</div>
+    {{/if}}
 </template>
 
 <template name="map">
