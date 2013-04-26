@@ -3,10 +3,10 @@ if (Meteor.isClient) {
   var LoggedIn = new Meteor.Collection('LoggedIn');
   var beating = false;
 
-  Template.nameList.returnPeople = function(){
+  Template.nameList.returnPeople = function() {
     var people = LoggedIn.find({user: {$ne : Meteor.userId()}}).fetch();
     var userInfo = [];
-    for (var i = 0; i < people.length; i++){
+    for (var i = 0; i < people.length; i++) {
       userInfo.push(Meteor.users.findOne({_id: people[i].user}));
     }
 
@@ -25,14 +25,14 @@ if (Meteor.isClient) {
   var initialise = function() {
     navigator.geolocation.getCurrentPosition(app.setPosition);
 
-    Meteor.autorun(function(){
-      if (Meteor.user()){
+    Meteor.autorun(function() {
+      if (Meteor.user()) {
         var origin = Session.get('origin');
       }
 
-      if (!origin){
+      if (!origin) {
         console.log('loading...');
-      } else if (origin && !LoggedIn.findOne({user: Meteor.userId()})){
+      } else if (origin && !LoggedIn.findOne({user: Meteor.userId()})) {
         LoggedIn.insert({user: Meteor.userId(), position: origin});
       } else {
         app.findOthers();
@@ -42,8 +42,8 @@ if (Meteor.isClient) {
     });
   };
 
-  Meteor.startup(function(){
-    Template.map.rendered = function(){
+  Meteor.startup(function() {
+    Template.map.rendered = function() {
       initialise();
     };
   });

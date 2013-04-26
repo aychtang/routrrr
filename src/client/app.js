@@ -1,4 +1,4 @@
-(function(){
+(function() {
 
   var types = {
     markers: [],
@@ -94,7 +94,7 @@
   var drawBounds = function(newLat, newLon) {
     var bound;
 
-    var polyCoords =[
+    var polyCoords = [
       new google.maps.LatLng(myLat, newLon),
       new google.maps.LatLng(myLat, myLon),
       new google.maps.LatLng(newLat, myLon),
@@ -167,13 +167,10 @@
     //Initialises heartbeat interval
     startBeating : function() {
       if (!beating) {
-        var heartbeat =
         Meteor.setInterval(function() {
-        Meteor.call('heartbeat', Meteor.userId());
-      }, 500)
+          Meteor.call('heartbeat', Meteor.userId());
+        }, 500)
         beating = true;
-      } else {
-        return false;
       }
     }
   };
