@@ -18,7 +18,7 @@ if (Meteor.isServer) {
       var now = new Date().getTime();
       LoggedIn.find({timestamp: {$lt: (now - 4 * 1000)}})
       .fetch()
-      .forEach(function(data){
+      .forEach(function(data) {
         LoggedIn.remove(data)
       });
     }, 1500);
