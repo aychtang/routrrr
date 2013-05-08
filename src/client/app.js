@@ -122,9 +122,10 @@
 
     service.nearbySearch(request, function(results) {
       clear('results');
+      console.log(results);
       for (var i = 0; i < results.length; i++) {
         if (results[i].rating > 4) {
-          placeResult(results[i].geometry.location.jb, results[i].geometry.location.kb, results[i]);
+          placeResult(results[i].geometry.location.kb, results[i].geometry.location.lb, results[i]);
         }
       }
     });
@@ -158,7 +159,6 @@
             var otherInfo = others[i];
             var otherUser = Meteor.users.findOne({_id: others[i].user});
             placeOtherUsers(otherInfo.position.kb, otherInfo.position.lb, otherUser);
-            placeOtherUsers(otherInfo.position.jb, otherInfo.position.kb, otherUser);
           }
         }, 1500);
       }
