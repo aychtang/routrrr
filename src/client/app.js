@@ -11,7 +11,6 @@
   var currentMarker;
   var origin;
 
-  // todo: wrap this up into a route object
   var clear = function(type) {
     for (var i = 0; i < types[type].length; i++) {
       types[type][i].setMap(null);
@@ -92,8 +91,7 @@
 
   //function draws bounding box
   var drawBounds = function(newLat, newLon) {
-    var bound;
-
+    // Sets corners of the shape that is to be rendered on the map.
     var polyCoords = [
       new google.maps.LatLng(myLat, newLon),
       new google.maps.LatLng(myLat, myLon),
@@ -101,11 +99,13 @@
       new google.maps.LatLng(newLat, newLon),
     ];
 
+    // Checks each coord and determines their orientation
     var mostNorth = Math.max(myLat, newLat);
     var mostEast  = Math.max(myLon, newLon);
     var mostWest  = Math.min(myLon, newLon);
     var mostSouth = Math.min(myLat, newLat);
 
+    // Finds the NE and SW corner, creates bounding box.
     var NE = new google.maps.LatLng(mostNorth, mostEast);
     var SW = new google.maps.LatLng(mostSouth, mostWest);
     var boundz = new google.maps.LatLngBounds(SW, NE);
@@ -115,17 +115,17 @@
       types: ['cafe']
     };
 
-    bound = new google.maps.Polygon({paths: polyCoords, strokeColor: "#333", strokeOpacity: 0.8, strokeWeight: 3, fillColor: "rgb(70, 182, 66)", fillOpacity: 0.25});
+    var bound = new google.maps.Polygon({paths: polyCoords, strokeColor: "#333", strokeOpacity: 0.8, strokeWeight: 3, fillColor: "rgb(70, 182, 66)", fillOpacity: 0.25});
 
     types.bounds.push(bound);
     bound.setMap(map);
 
+    // Searches the space within the bouding box for cafes.
     service.nearbySearch(request, function(results) {
       clear('results');
-      console.log(results);
       for (var i = 0; i < results.length; i++) {
         if (results[i].rating > 4) {
-          placeResult(results[i].geometry.location.kb, results[i].geometry.location.lb, results[i]);
+          placeResult(results[i].geometry.location.jb, results[i].geometry.location.kb, results[i]);
         }
       }
     });
@@ -140,7 +140,7 @@
     },
 
     //Sets the latitude and longitude of the user, calls map and marker makers
-    setPosition : function(position) {
+    setPosition: function(position) {
       var lat = position.coords.latitude;
       var lon = position.coords.longitude;
       myLat = lat;
@@ -149,7 +149,7 @@
       placeMarker(lat, lon);
     },
 
-    findOthers : function() {
+    findOthers: function() `{
       var user = Meteor.userId();
       if (!beating) {
         Meteor.setInterval(function() {
@@ -158,14 +158,14 @@
           for (var i = 0; i < others.length; i++) {
             var otherInfo = others[i];
             var otherUser = Meteor.users.findOne({_id: others[i].user});
-            placeOtherUsers(otherInfo.position.kb, otherInfo.position.lb, otherUser);
+            placeOtherUsers(otherInfo.position.jb, otherInfo.position.kb, otherUser);
           }
         }, 1500);
       }
     },
 
     //Initialises heartbeat interval
-    startBeating : function() {
+    startBeating: function() {
       if (!beating) {
         Meteor.setInterval(function() {
           Meteor.call('heartbeat', Meteor.userId());

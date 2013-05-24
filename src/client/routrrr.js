@@ -16,9 +16,9 @@ if (Meteor.isClient) {
   Template.player.preserve(['.users']);
 
   Template.player.events = {
-    'click .users' : function () {
-      var thisUser = LoggedIn.findOne({user : this._id});
-      app.routeToPosition(thisUser.position.kb, thisUser.position.lb);
+    'click .users': function () {
+      var thisUser = LoggedIn.findOne({user: this._id});
+      app.routeToPosition(thisUser.position.jb, thisUser.position.kb);
     }
   };
 
@@ -26,18 +26,14 @@ if (Meteor.isClient) {
     navigator.geolocation.getCurrentPosition(app.setPosition);
 
     Meteor.autorun(function() {
-      if (Meteor.user()) {
-        var origin = Session.get('origin');
-      }
+      var origin = Meteor.user() && Session.get('origin');
 
       if (!origin) {
-      } else if (origin && !LoggedIn.findOne({user: Meteor.userId()})) {
-        LoggedIn.insert({user: Meteor.userId(), position: origin});
-      } else {
         app.findOthers();
         app.startBeating();
+      } else if (origin && !LoggedIn.findOne({user: Meteor.userId()})) {
+        LoggedIn.insert({user: Meteor.userId(), position: origin});
       }
-
     });
   };
 

@@ -6,10 +6,6 @@ if (Meteor.isServer) {
       if (thisUser) {
         LoggedIn.update(thisUser, {$set: {timestamp: new Date().getTime()}});
       }
-    },
-
-    superclear : function() {
-      LoggedIn.remove({});
     }
   });
 
