@@ -27,7 +27,6 @@ if (Meteor.isClient) {
 
     Meteor.autorun(function() {
       var origin = Meteor.user() && Session.get('origin');
-
       if (LoggedIn.findOne({user: Meteor.userId()})) {
         app.findOthers();
         app.startBeating();

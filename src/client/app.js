@@ -125,7 +125,7 @@
       clear('results');
       for (var i = 0; i < results.length; i++) {
         if (results[i].rating > 4) {
-          placeResult(results[i].geometry.location.jb, results[i].geometry.location.kb, results[i]);
+          placeResult(results[i].geometry.location.lat(), results[i].geometry.location.lng(), results[i]);
         }
       }
     });
@@ -149,7 +149,7 @@
       placeMarker(lat, lon);
     },
 
-    findOthers: function() `{
+    findOthers: function() {
       var user = Meteor.userId();
       if (!beating) {
         Meteor.setInterval(function() {
