@@ -18,16 +18,14 @@ if (Meteor.isClient) {
   Template.player.events = {
     'click .users': function () {
       var thisUser = LoggedIn.findOne({user: this._id});
-      app.routeToPosition(thisUser.position.jb, thisUser.position.kb);
+      app.routeToPosition(thisUser.position.lat, thisUser.position.lon);
     }
   };
 
   var initialise = function() {
     navigator.geolocation.getCurrentPosition(app.setPosition);
-
     Meteor.autorun(function() {
       var origin = Meteor.user() && Session.get('origin');
-
       if (LoggedIn.findOne({user: Meteor.userId()})) {
         app.findOthers();
         app.startBeating();

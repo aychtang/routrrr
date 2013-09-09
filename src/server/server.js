@@ -15,7 +15,7 @@ if (Meteor.isServer) {
       LoggedIn.find({timestamp: {$lt: (now - 4 * 1000)}})
       .fetch()
       .forEach(function(data) {
-        LoggedIn.remove(data)
+        LoggedIn.remove(data);
       });
     }, 1500);
   });

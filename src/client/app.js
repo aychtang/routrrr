@@ -20,18 +20,22 @@
 
   //places a marker at given lat and lon, inserts position into DB if there is no current marker by user
   var placeMarker = function(lat, lon) {
-
     var position = new google.maps.LatLng(lat, lon);
     currentMarker = new google.maps.Marker({
       position: position,
     });
 
-    origin = origin || currentMarker;
+    var data = {
+      lat: position.lat(),
+      lng: position.lng()
+    };
+
+    origin = origin || data;
     if (currentMarker !== origin) {
       types.markers.push(currentMarker);
     }
     currentMarker.setMap(map);
-    Session.set('origin', origin.position);
+    Session.set('origin', data);
   };
 
   var googleClickHandler = function(event) {
@@ -125,7 +129,7 @@
       clear('results');
       for (var i = 0; i < results.length; i++) {
         if (results[i].rating > 4) {
-          placeResult(results[i].geometry.location.jb, results[i].geometry.location.kb, results[i]);
+          placeResult(results[i].geometry.location.lat(), results[i].geometry.location.lng(), results[i]);
         }
       }
     });
@@ -149,7 +153,7 @@
       placeMarker(lat, lon);
     },
 
-    findOthers: function() `{
+    findOthers: function() {
       var user = Meteor.userId();
       if (!beating) {
         Meteor.setInterval(function() {
@@ -158,7 +162,7 @@
           for (var i = 0; i < others.length; i++) {
             var otherInfo = others[i];
             var otherUser = Meteor.users.findOne({_id: others[i].user});
-            placeOtherUsers(otherInfo.position.jb, otherInfo.position.kb, otherUser);
+            placeOtherUsers(otherInfo.position.lat, otherInfo.position.lng, otherUser);
           }
         }, 1500);
       }
